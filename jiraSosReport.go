@@ -11,6 +11,7 @@ func main() {
 	jiraURL := "https://issues.redhat.com"
 	username, password := functions.ReadCredentials()
 
+	//Jira JQL are advanced search methods to pull the report information we need. These can be used in the WebUI how ever you will need to remove \ from before " when doing so.
 	var jiraJQL [3][2]string
 	jiraJQL[0][0] = "project = WINC AND (resolved >= -7d OR (status in (Done, Pending) AND sprint in openSprints())) AND priority in (Blocker, Critical, High) ORDER BY priority DESC"
 	jiraJQL[0][1] = "--Completed\\Completing Last Week--"

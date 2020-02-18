@@ -12,6 +12,7 @@ func main() {
 	jiraURL := "https://issues.redhat.com"
 	username, password := functions.ReadCredentials()
 
+	//Jira JQL are advanced search methods to pull the report information we need. These can be used in the WebUI how ever you will need to remove \ from before " when doing so.
 	var jiraJQL [1][2]string
 	jiraJQL[0][0] = "project = WINC AND status in (\"In Progress\", \"Code Review\")AND(sprint in openSprints())"
 	jiraJQL[0][1] = "--Current Winc Work Items--"
@@ -47,10 +48,13 @@ func main() {
 				fmt.Printf("\n==> error: %v\n", err)
 				return
 			}
-			c := u.RenderedFields.Comments.Comments[len(u.RenderedFields.Comments.Comments)-1]
-			if strings.Contains(c.Updated, "days ago") || strings.Contains(c.Updated, "Yesterday") {
-				fmt.Printf("%s Please comment/update - Last was %+v - ", i.Fields.Assignee.DisplayName, c.Updated)
-				fmt.Printf("%s/browse/%s \n", strings.TrimSpace(jiraURL), i.Key)
+			length := len(u.RenderedFields.Comments.Comments)
+			if length > 1 {
+				c := u.RenderedFields.Comments.Comments[length-1]
+				if strings.Contains(c.Updated, "days ago") || strings.Contains(c.Updated, "Yesterday") {
+					fmt.Printf("%s Please comment/update - Last was %+v - ", i.Fields.Assignee.DisplayName, c.Updated)
+					fmt.Printf("%s/browse/%s \n", strings.TrimSpace(jiraURL), i.Key)
+				}
 			}
 		}
 	}
