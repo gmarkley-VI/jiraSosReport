@@ -11,13 +11,17 @@ func main() {
 	jiraURL := "https://issues.redhat.com"
 	username, password := functions.ReadCredentials()
 
+	//todo: Change this to global variables
+	bugzilla_team := "WindowsContainers"
+	jira_team := "WINC"
+
 	//Jira JQL are advanced search methods to pull the report information we need. These can be used in the WebUI how ever you will need to remove \ from before " when doing so.
 	var jiraJQL [3][2]string
-	jiraJQL[0][0] = "project = WINC AND (resolved >= -7d OR (status in (Done, Pending) AND sprint in openSprints())) AND priority in (Blocker, Critical, High) ORDER BY priority DESC"
+	jiraJQL[0][0] = "project = " + jira_team + " AND (resolved >= -7d OR (status in (Done, Pending) AND sprint in openSprints())) AND priority in (Blocker, Critical, High) ORDER BY priority DESC"
 	jiraJQL[0][1] = "--Completed\\Completing Last Week--"
-	jiraJQL[1][0] = "project = WINC AND (status in (\"In Progress\", \"Code Review\") AND sprint in openSprints()) AND priority in (Blocker, Critical, High) ORDER BY priority DESC"
+	jiraJQL[1][0] = "project = " + jira_team + " AND (status in (\"In Progress\", \"Code Review\") AND sprint in openSprints()) AND priority in (Blocker, Critical, High) ORDER BY priority DESC"
 	jiraJQL[1][1] = "--Currently Active--"
-	jiraJQL[2][0] = "project = WINC AND (status in (\"To Do\") AND sprint in openSprints()) AND priority in (Blocker, Critical, High) ORDER BY priority DESC"
+	jiraJQL[2][0] = "project = " + jira_team + " AND (status in (\"To Do\") AND sprint in openSprints()) AND priority in (Blocker, Critical, High) ORDER BY priority DESC"
 	jiraJQL[2][1] = "--Remaining in Sprint--"
 
 	//Create the client
@@ -49,4 +53,10 @@ func main() {
 		}
 	}
 
+	//Get Bugzilla bugs and Display them
+	allbugs, versionbugs := functions.ReturnBugs(bugzilla_team)
+
+	fmt.Printf("\n--Bugzilla Bugs for %s--\n", bugzilla_team)
+	fmt.Printf("All Bugs: %s\n", allbugs)
+	fmt.Printf("Current Version Bugs: %s\n", versionbugs)
 }
