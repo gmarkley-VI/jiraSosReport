@@ -9,11 +9,7 @@ import (
 
 func main() {
 	jiraURL := "https://issues.redhat.com"
-	username, password := functions.ReadCredentials()
-
-	//todo: Change this to global variables
-	bugzilla_team := "WindowsContainers"
-	jira_team := "WINC"
+	username, password, bugzilla_team, jira_team := functions.ReadCredentials()
 
 	//Jira JQL are advanced search methods to pull the report information we need. These can be used in the WebUI how ever you will need to remove \ from before " when doing so.
 	var jiraJQL [3][2]string
@@ -54,6 +50,7 @@ func main() {
 	}
 
 	//Get Bugzilla bugs and Display them
+
 	allbugs, versionbugs := functions.ReturnBugs(bugzilla_team)
 
 	fmt.Printf("\n--Bugzilla Bugs for %s--\n", bugzilla_team)
